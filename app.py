@@ -1,4 +1,4 @@
-"""CafeReserve AI - Streamlit frontend. Run: streamlit run app.py"""
+"""Cafe Insight — Smart Reservations. Happier Customers. Better Decisions."""
 import os
 import numpy as np
 import pandas as pd
@@ -7,22 +7,35 @@ import plotly.graph_objects as go
 import streamlit as st
 import ml_core as core
 
-st.set_page_config(page_title="CaféReserve AI", page_icon="☕", layout="wide")
+st.set_page_config(page_title="Cafe Insight", page_icon="☕", layout="wide", initial_sidebar_state="expanded")
 ESP, DARK, CREAM, LATTE, CARAMEL, SAGE = "#4B2E22", "#2D1E18", "#FAF6EF", "#E8D5BD", "#B87946", "#87977A"
 COLORS = [CARAMEL, ESP, SAGE, LATTE]
 
 st.markdown(f"""<style>
-.stApp {{ background:{CREAM}; }}
-[data-testid="stSidebar"] {{ background:{DARK}; }}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+.stApp {{ background:linear-gradient(180deg,#fbf8f2 0%,{CREAM} 48%,#f5eee5 100%); color:{DARK}; }}
+.block-container {{ padding-top:2rem; padding-bottom:3rem; max-width:1440px; }}
+[data-testid="stSidebar"] {{ background:linear-gradient(180deg,{DARK} 0%,#40291f 100%); border-right:1px solid #604638; }}
 [data-testid="stSidebar"] * {{ color:{LATTE} !important; }}
-h1,h2,h3 {{ color:{ESP}; font-family:Georgia,serif; }}
-.card {{ background:#fff; border:1px solid {LATTE}; border-radius:14px; padding:16px 18px;
-        box-shadow:0 2px 6px rgba(75,46,34,.08); }}
-.card .l {{ color:#7a6657; font-size:13px; }} .card .v {{ color:{ESP}; font-size:28px; font-weight:700; }}
-.card .s {{ color:{SAGE}; font-size:12px; }}
-.stButton>button {{ background:{ESP}; color:#fff; border:0; border-radius:8px; padding:.5rem 1.2rem; }}
-.stButton>button:hover {{ background:{CARAMEL}; color:#fff; }}
-.note {{ background:{LATTE}55; border-left:4px solid {CARAMEL}; padding:8px 12px; border-radius:6px; color:{ESP}; }}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2 {{ color:#fff7ed !important; font-family:'Playfair Display',Georgia,serif; }}
+[data-testid="stSidebar"] [role="radiogroup"] label {{ padding:9px 12px; border-radius:10px; margin:2px 0; }}
+[data-testid="stSidebar"] [role="radiogroup"] label:hover {{ background:#5b3b2d; }}
+h1,h2,h3 {{ color:{ESP}; font-family:'Playfair Display',Georgia,serif; letter-spacing:-.02em; }}
+p,label,.stCaption {{ font-family:'DM Sans',sans-serif; }}
+h1 {{ font-size:2.4rem !important; margin-bottom:.15rem; }}
+[data-testid="stMetric"] {{ background:#fffdf9; border:1px solid #ead9c8; border-radius:16px; padding:18px 20px; box-shadow:0 5px 18px rgba(75,46,34,.055); }}
+[data-testid="stMetricLabel"] p {{ color:#806b5b !important; font-size:.9rem; }}
+[data-testid="stMetricValue"] {{ color:{ESP} !important; font-weight:700; }}
+.card {{ background:linear-gradient(145deg,#fffefa,#fff); border:1px solid #ead9c8; border-radius:18px; padding:18px 20px; box-shadow:0 6px 22px rgba(75,46,34,.065); min-height:108px; }}
+.card .l {{ color:#806b5b; font-size:13px; font-weight:600; }} .card .v {{ color:{ESP}; font-size:28px; font-weight:700; margin-top:4px; }} .card .s {{ color:{SAGE}; font-size:12px; margin-top:4px; }}
+.stButton>button,[data-testid="stFormSubmitButton"] button {{ background:{ESP}; color:#fff; border:0; border-radius:10px; padding:.58rem 1.15rem; font-weight:600; transition:all .2s ease; }}
+.stButton>button:hover,[data-testid="stFormSubmitButton"] button:hover {{ background:{CARAMEL}; color:#fff; transform:translateY(-1px); }}
+.note {{ background:#f2e4d3; border-left:4px solid {CARAMEL}; padding:12px 15px; border-radius:10px; color:{ESP}; }}
+.action-card {{ background:#fffdf9; border:1px solid #ead9c8; border-radius:16px; padding:17px 18px; margin:8px 0 12px; box-shadow:0 4px 16px rgba(75,46,34,.045); }}
+.action-title {{ font-weight:700; color:{ESP}; font-size:1.02rem; margin-bottom:5px; }} .action-body {{ color:#695649; font-size:.93rem; line-height:1.5; }}
+.pill {{ display:inline-block; padding:4px 9px; border-radius:999px; background:#e7eddf; color:#40563a; font-size:11px; font-weight:700; margin-bottom:8px; }}
+div[data-testid="stDataFrame"] {{ border:1px solid #ead9c8; border-radius:12px; overflow:hidden; }} [data-testid="stTabs"] button {{ font-weight:600; }} hr {{ border-color:#ead9c8; }}
+@media(max-width:700px) {{ h1 {{ font-size:1.8rem !important; }} .block-container {{ padding-left:1rem; padding-right:1rem; }} }}
 </style>""", unsafe_allow_html=True)
 
 
@@ -62,9 +75,38 @@ def note(text):
     st.markdown(f'<div class="note">{text}</div>', unsafe_allow_html=True)
 
 
-# ------------------------------------------------------------------ pages
+# ------------------------------------------------------------------ insights and pages
+def action_card(tag, title, body):
+    st.markdown(f'<div class="action-card"><span class="pill">{tag}</span><div class="action-title">{title}</div><div class="action-body">{body}</div></div>', unsafe_allow_html=True)
+
+
+def next_steps():
+    header("What to Do Next ✨", "A practical, optimistic checklist to turn café data into better decisions.")
+    st.info("This project currently uses synthetic demo data. These are ideas to test—not verified findings about a real café.")
+    hours = DF.groupby("hour").size().sort_values(ascending=False)
+    peak_hour = int(hours.index[0]) if len(hours) else 19
+    no_show_rate = float(DF["no_show"].mean()) if len(DF) else 0.0
+    repeat_visits = float(DF["past_visits"].mean()) if len(DF) else 0.0
+    avg_party = float(DF["party_size"].mean()) if len(DF) else 2.0
+    avg_spend = float(DF["spend"].mean()) if len(DF) else 0.0
+    a, b = st.columns(2)
+    with a:
+        action_card("PLAN AHEAD", "Prepare for busy periods", f"The demo data has the most bookings around {peak_hour}:00. Once real booking history is connected, use busy periods to plan staff coverage and table turnover.")
+        action_card("FRIENDLY FOLLOW-UP", "Try a gentle reminder routine", f"The sample no-show rate is {no_show_rate:.1%}. Test a polite confirmation or reminder, then compare attendance before and after. Never cancel automatically from a model score.")
+        action_card("BETTER TABLE FIT", "Match tables to group size", f"The average party size in this sample is {avg_party:.1f}. Track real party sizes to improve seating plans and avoid awkward gaps between tables.")
+    with b:
+        action_card("BUILD LOYALTY", "Thank returning guests", f"The sample averages {repeat_visits:.1f} past visits per record. With real customer history, consider a thank-you offer for repeat visitors without assuming every guest wants a promotion.")
+        action_card("TEST & LEARN", "Experiment with one small improvement", f"Average spend in the sample is ₹{avg_spend:,.0f}. Test one offer or service change at a time and measure booking conversion, spend, and guest feedback before scaling it.")
+        action_card("KEEP IMPROVING", "Review model quality regularly", "Compare precision and recall for no-show predictions and track party-size prediction errors. Validate with representative real data before operational use.")
+    st.subheader("Your next-step checklist")
+    items = ["Replace synthetic records with consented real reservation data", "Check data quality and define what counts as a no-show", "Measure a baseline before changing reminders or staffing", "Review model metrics and errors regularly", "Collect guest feedback and protect personal information"]
+    for i, item in enumerate(items):
+        st.checkbox(item, key=f"next_step_{i}")
+    st.caption("This checklist is a planning aid. Checking an item does not modify data or contact customers.")
+
+
 def dashboard():
-    header("Good day, Café Manager!", "Your café's reservations and customer insights at a glance.")
+    header("A brighter view of your café ☕", "Small insights today can lead to happier guests tomorrow.")
     c = st.columns(4)
     with c[0]: card("Total bookings", f"{len(DF):,}", "rows in dataset")
     with c[1]: card("Average party size", f"{DF.party_size.mean():.2f}", "people per booking")
@@ -85,6 +127,16 @@ def dashboard():
     b.plotly_chart(style(px.histogram(DF, x="spend", nbins=30, title="Spending distribution")), use_container_width=True)
     st.subheader("Recent bookings")
     st.dataframe(DF.tail(8), use_container_width=True, hide_index=True)
+    st.divider()
+    st.subheader("✨ What to Do Next")
+    st.caption("A couple of positive, practical ideas to start with.")
+    hours_sorted = DF.groupby("hour").size().sort_values(ascending=False)
+    peak_hour = int(hours_sorted.index[0]) if len(hours_sorted) else 19
+    action_card("QUICK WIN", "Plan for peak periods", f"Explore {peak_hour}:00 as a possible busy period. Confirm the pattern with real bookings before changing staff schedules.")
+    action_card("GUEST EXPERIENCE", "Make confirmations easy", "Test a friendly reminder and a simple way for guests to confirm or update a booking. Compare actual attendance before and after.")
+    if st.button("Explore all next steps →"):
+        st.session_state["selected_page"] = "✨  What to Do Next"
+        st.rerun()
 
 
 def reservation():
@@ -232,7 +284,7 @@ def explorer():
 
 
 def about():
-    header("About the Project", "CaféReserve AI: Table Reservation Demand Prediction and Customer Analytics")
+    header("About Cafe Insight", "Smart Reservations. Happier Customers. Better Decisions.")
     st.write("**Aim:** predict party size and no-shows and group customers for a café, using all seven lab practicals.")
     st.markdown("""
 **Practicals:** 1 Missing values and EDA · 2 Simple and multiple linear regression · 3 Logistic, KNN and Naive Bayes ·
@@ -247,9 +299,15 @@ before the train/test split, as in the original script; this is a simplification
 """)
 
 
-PAGES = {"📊  Dashboard": dashboard, "🪑  Reservation Prediction": reservation, "🚫  No-Show Prediction": noshow,
+PAGES = {"📊  Dashboard": dashboard, "✨  What to Do Next": next_steps,
+         "🪑  Reservation Prediction": reservation, "🚫  No-Show Prediction": noshow,
          "👥  Customer Segmentation": segmentation, "📈  Model Performance": performance,
          "🗂️  Dataset Explorer": explorer, "ℹ️  About Project": about}
-st.sidebar.markdown("## ☕ CaféReserve AI")
-st.sidebar.caption("Smart Café Analytics")
-PAGES[st.sidebar.radio("Navigate", list(PAGES), label_visibility="collapsed")]()
+st.sidebar.markdown("## ☕ Cafe Insight")
+st.sidebar.caption("Smart Reservations · Happier Customers")
+st.sidebar.markdown("---")
+page_names = list(PAGES)
+default_page = st.session_state.pop("selected_page", page_names[0])
+selected = st.sidebar.radio("Navigate", page_names, index=page_names.index(default_page) if default_page in page_names else 0,
+                            label_visibility="collapsed")
+PAGES[selected]()
