@@ -13,7 +13,7 @@ COLORS = [CARAMEL, ESP, SAGE, LATTE]
 
 st.markdown(f"""<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
-.stApp {{ background:linear-gradient(180deg,#fbf8f2 0%,{CREAM} 48%,#f5eee5 100%); color:{light}; }}
+.stApp {{ background:linear-gradient(180deg,#fbf8f2 0%,{CREAM} 48%,#f5eee5 100%); color:{DARK}; }}
 .block-container {{ padding-top:2rem; padding-bottom:3rem; max-width:1440px; }}
 [data-testid="stSidebar"] {{ background:linear-gradient(180deg,{DARK} 0%,#40291f 100%); border-right:1px solid #604638; }}
 [data-testid="stSidebar"] * {{ color:{LATTE} !important; }}
