@@ -18,7 +18,7 @@ st.markdown(f"""<style>
 .stApp {{ background:linear-gradient(180deg,#fbf8f2 0%,{CREAM} 48%,#f5eee5 100%); color:{DARK}; }}
 .block-container {{ padding-top:2rem; padding-bottom:3rem; max-width:1440px; }}
 [data-testid="stSidebar"] {{ background:linear-gradient(180deg,{DARK} 0%,#40291f 100%); border-right:1px solid #604638; }}
-[data-testid="stSidebar"] * {{ color:{LATTE} !important; }}
+[data-testid="stSidebar"] * {{ color:{CREAM} !important; }}
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2 {{ color:#fff7ed !important; font-family:'Playfair Display',Georgia,serif; }}
 [data-testid="stSidebar"] [role="radiogroup"] label {{ padding:9px 12px; border-radius:10px; margin:2px 0; }}
 [data-testid="stSidebar"] [role="radiogroup"] label:hover {{ background:#5b3b2d; }}
