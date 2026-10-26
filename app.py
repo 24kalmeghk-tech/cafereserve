@@ -29,7 +29,7 @@ p,label,.stCaption {{ font-family:'DM Sans',sans-serif; }}
 .stApp [role="radiogroup"] label {{ color:{DARK} !important; background:#fffdf9; border:1px solid #ead9c8; padding:8px 12px; border-radius:10px; margin-right:6px; }}
 .stApp [role="radiogroup"] label p {{ color:{CREAM} !important; font-weight:600 !important; }}
 .stApp [role="radiogroup"] label:has(input:checked) {{ background:#ead9c8; border-color:{CARAMEL}; }}
-.stApp [data-baseweb="select"] * {{ color:{DARK} !important; }}
+.stApp [data-baseweb="select"] * {{ color:{CREAM} !important; }}
 .stApp input, .stApp textarea {{ color:{DARK} !important; }}
 [data-testid="stSidebar"] [role="radiogroup"] label {{ background:transparent; border-color:transparent; color:{LATTE} !important; }}
 [data-testid="stSidebar"] [role="radiogroup"] label p {{ color:{LATTE} !important; }}
