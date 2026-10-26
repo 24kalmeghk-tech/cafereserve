@@ -18,7 +18,7 @@ st.markdown(f"""<style>
 .stApp {{ background:linear-gradient(180deg,#fbf8f2 0%,{CREAM} 48%,#f5eee5 100%); color:{DARK}; }}
 .block-container {{ padding-top:2rem; padding-bottom:3rem; max-width:1440px; }}
 [data-testid="stSidebar"] {{ background:linear-gradient(180deg,{DARK} 0%,#40291f 100%); border-right:1px solid #604638; }}
-[data-testid="stSidebar"] * {{ color:{CREAM} !important; }}
+[data-testid="stSidebar"] * {{ color:{LATTE} !important; }}
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2 {{ color:#fff7ed !important; font-family:'Playfair Display',Georgia,serif; }}
 [data-testid="stSidebar"] [role="radiogroup"] label {{ padding:9px 12px; border-radius:10px; margin:2px 0; }}
 [data-testid="stSidebar"] [role="radiogroup"] label:hover {{ background:#5b3b2d; }}
@@ -27,7 +27,7 @@ p,label,.stCaption {{ font-family:'DM Sans',sans-serif; }}
 /* High-contrast labels and clearly visible radio/select options */
 .stApp label, .stApp [data-testid="stWidgetLabel"] p {{ color:{DARK} !important; font-weight:600 !important; }}
 .stApp [role="radiogroup"] label {{ color:{DARK} !important; background:#fffdf9; border:1px solid #ead9c8; padding:8px 12px; border-radius:10px; margin-right:6px; }}
-.stApp [role="radiogroup"] label p {{ color:{DARK} !important; font-weight:600 !important; }}
+.stApp [role="radiogroup"] label p {{ color:{CREAM} !important; font-weight:600 !important; }}
 .stApp [role="radiogroup"] label:has(input:checked) {{ background:#ead9c8; border-color:{CARAMEL}; }}
 .stApp [data-baseweb="select"] * {{ color:{DARK} !important; }}
 .stApp input, .stApp textarea {{ color:{DARK} !important; }}
