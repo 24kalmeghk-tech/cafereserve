@@ -52,14 +52,14 @@ div[data-testid="stDataFrame"] {{ border:1px solid #ead9c8; border-radius:12px; 
 .stApp [data-testid="stSelectbox"] [data-baseweb="select"] > div {{
     background-color: #FFFDF8 !important;
     border: 1px solid #B87946 !important;
-    color: #2D1E18 !important;
+    color: #FFFEFB !important;
     border-radius: 9px !important;
 }}
 .stApp [data-testid="stSelectbox"] [data-baseweb="select"] div,
 .stApp [data-testid="stSelectbox"] [data-baseweb="select"] span,
 .stApp [data-testid="stSelectbox"] input {{
-    color: #2D1E18 !important;
-    -webkit-text-fill-color: #2D1E18 !important;
+    color: #FFFEFB !important;
+    -webkit-text-fill-color: #FFFEFB !important;
 }}
 /* Popup panel and all choices, including Sunny, Rainy, Cloudy, Windy and model names */
 [data-baseweb="popover"] [role="listbox"],
@@ -69,7 +69,7 @@ div[data-testid="stDataFrame"] {{ border:1px solid #ead9c8; border-radius:12px; 
 [data-baseweb="popover"] [role="option"],
 [data-baseweb="popover"] li {{
     background-color: #FFFDF8 !important;
-    color: #2D1E18 !important;
+    color: #FFFEFB !important;
 }}
 [data-baseweb="popover"] [role="option"] *,
 [data-baseweb="popover"] li * {{
